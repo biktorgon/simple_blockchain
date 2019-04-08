@@ -23,8 +23,22 @@
                 name="whom" value="{{ request.form.get('whom', '') }}">
     </div>
 
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary">Create block</button>
 
 </form>
+
+{% endblock %}
+
+{% block checking %}
+
+    {% for res in results %}
+
+        <div class="result">
+
+            block {{ res['block'] }} -> {{ res['result'] }}
+
+        </div>
+
+    {% endfor %}
 
 {% endblock %}

@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import render_template
+from flask import render_template, redirect, url_for
 from flask import request
 from block import *
 
@@ -15,7 +15,14 @@ def index():
         whom = request.form['whom']
 
         write_file_transact(who, amount, whom)
+        return redirect(url_for('index'))
     return render_template('index.html')
+
+
+@app.route('/checking', methods=['GET'])
+def check():
+    results = check_blocks_hash()
+    return render_template('index.html', results=results)
 
 
 if __name__ == "__main__":
