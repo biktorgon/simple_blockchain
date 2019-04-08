@@ -13,35 +13,35 @@ def get_hash(file_name):
 
 def check_blocks_hash():
     results = []
-    files = os.listdir(TRANSACT_DIR)
-    files = sorted(files, key=int)
+    blocks = os.listdir(TRANSACT_DIR)
+    blocks = sorted(blocks, key=int)
 
-    for file in files[1:]:
-        with open(TRANSACT_DIR + str(file)) as current_file:
-            current_file_data = json.load(current_file)
-            prev_file = str(int(file) - 1)
-            actual_hash = get_hash(prev_file)
+    for block in blocks[1:]:
+        with open(TRANSACT_DIR + block) as current_block:
+            current_block_data = json.load(current_block)
+            prev_block = str(int(block) - 1)
+            actual_hash = get_hash(prev_block)
 
-            if current_file_data['hash'] == actual_hash:
+            if current_block_data['hash'] == actual_hash:
                 res = 'Ok'
             else:
                 res = 'Corrupted'
 
-            results.append({'block': prev_file, 'result': res})
+            results.append({'block': prev_block, 'result': res})
 
     return results
 
 
-def write_file_transact(who, amount, to_whom, block_hash=''):
-    file = 0
-    files = os.listdir(TRANSACT_DIR)
+def write_block_transact(who, amount, to_whom, block_hash=''):
+    block = 0
+    blocks = os.listdir(TRANSACT_DIR)
 
-    if len(files) != 0:
-        file = sorted(files, key=int)[-1]
+    if len(blocks) != 0:
+        block = sorted(blocks, key=int)[-1]
         if not block_hash:
-            block_hash = get_hash(file)
+            block_hash = get_hash(block)
 
-    new_file = str(int(file) + 1)
+    new_block = str(int(block) + 1)
     data = {
         'name': who,
         'amount': amount,
@@ -49,5 +49,5 @@ def write_file_transact(who, amount, to_whom, block_hash=''):
         'hash': block_hash
     }
 
-    with open(TRANSACT_DIR + new_file, 'w') as file:
+    with open(TRANSACT_DIR + new_block, 'w') as file:
         json.dump(data, file, indent=4, ensure_ascii=False)

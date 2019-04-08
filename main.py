@@ -1,5 +1,7 @@
 from flask import Flask
-from flask import render_template, redirect, url_for
+from flask import render_template
+from flask import redirect
+from flask import url_for
 from flask import request
 from block import *
 
@@ -14,8 +16,9 @@ def index():
         amount = request.form['amount']
         whom = request.form['whom']
 
-        write_file_transact(who, amount, whom)
+        write_block_transact(who, amount, whom)
         return redirect(url_for('index'))
+
     return render_template('index.html')
 
 
@@ -26,4 +29,4 @@ def check():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
