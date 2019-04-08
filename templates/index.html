@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<form actionf="{{ url_for('index') }}" method="POST">
+
+    <div class="form-group">
+        <label for="exampleInputWho">Who</label>
+        <input type="text" class="form-control" id="exampleInputWho" placeholder="Enter name"
+                name="who" value="{{ request.form.get('who', '') }}">
+    </div>
+
+    <div class="form-group">
+        <label for="exampleInputAmount">Amount</label>
+        <input type="text" class="form-control" id="exampleInputAmount" placeholder="Enter sum"
+                name="amount" value="{{ request.form.get('amount', '') }}">
+    </div>
+
+    <div class="form-group">
+        <label for="exampleInputWhom">Whom</label>
+        <input type="text" class="form-control" id="exampleInputWhom" placeholder="Enter name"
+                name="whom" value="{{ request.form.get('whom', '') }}">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+
+</form>
+
+{% endblock %}

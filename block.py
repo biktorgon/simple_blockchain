@@ -32,7 +32,7 @@ def check_blocks_hash():
     return results
 
 
-def write_file_transact(name, amount, to_whom, block_hash=''):
+def write_file_transact(who, amount, to_whom, block_hash=''):
     file = 0
     files = os.listdir(TRANSACT_DIR)
 
@@ -43,7 +43,7 @@ def write_file_transact(name, amount, to_whom, block_hash=''):
 
     new_file = str(int(file) + 1)
     data = {
-        'name': name,
+        'name': who,
         'amount': amount,
         'to_whom': to_whom,
         'hash': block_hash
