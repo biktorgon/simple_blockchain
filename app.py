@@ -16,8 +16,12 @@ def index():
         amount = request.form['amount']
         whom = request.form['whom']
 
-        write_block_transact(who, amount, whom)
-        return redirect(url_for('index'))
+        try:
+            write_block_transact(who, amount, whom)
+        except Exception as err:
+            print(err)
+        else:
+            return redirect(url_for('index'))
 
     return render_template('index.html')
 
@@ -29,4 +33,4 @@ def check():
 
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True)

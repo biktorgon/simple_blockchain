@@ -14,32 +14,48 @@ def get_hash(file_name):
 def check_blocks_hash():
     results = []
     blocks = os.listdir(BLOCKS_DIR)
-    blocks = sorted(blocks, key=int)
+    try:
+        blocks = sorted(blocks, key=int)
+    except ValueError:
+        results.append({'block': 'Error', 'result': 'The file name must contain only digits'})
+        blocks = []
 
     for block in blocks[1:]:
         with open('/'.join((BLOCKS_DIR, block)), 'r') as current_block:
             block_data = json.load(current_block)
-            prev_block = str(int(block) - 1)
+
+        prev_block = str(int(block) - 1)
+        try:
             actual_hash = get_hash(prev_block)
+        except FileNotFoundError:
+            results.append({'block': 'Error', 'result': 'File not found! Blockchain is broken'})
+            break
+        except PermissionError:
+            results.append({'block': 'Error', 'result': 'Permission error'})
+            break
 
-            if block_data['hash'] == actual_hash:
-                res = 'Ok'
-            else:
-                res = 'Corrupted'
+        if block_data['hash'] == actual_hash:
+            res = 'Ok'
+        else:
+            res = 'Corrupted'
 
-            results.append({'block': prev_block, 'result': res})
+        results.append({'block': prev_block, 'result': res})
 
     return results
 
 
-def write_block_transact(who, amount, to_whom, block_hash=''):
+def write_block_transact(who, amount, to_whom):
     block = 0
     blocks = os.listdir(BLOCKS_DIR)
+    block_hash = ''
+    try:
+        blocks = sorted(blocks, key=int)
+    except ValueError:
+        raise ValueError('The file name must contain only digits')
 
-    if len(blocks) != 0:
-        block = sorted(blocks, key=int)[-1]
-        if not block_hash:
-            block_hash = get_hash(block)
+    if len(blocks) > 0:
+        block = blocks[-1]
+        block_hash = get_hash(block)
 
     new_block = str(int(block) + 1)
     data = {
