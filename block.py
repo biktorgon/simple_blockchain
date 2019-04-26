@@ -3,26 +3,26 @@ import os
 import hashlib
 
 
-TRANSACT_DIR = os.curdir + '/blockchain_transact/'
+BLOCKS_DIR = '/'.join((os.curdir, 'blockchain_transact'))
 
 
 def get_hash(file_name):
-    file = open(TRANSACT_DIR + file_name, 'rb').read()
-    return hashlib.md5(file).hexdigest()
+    with open('/'.join((BLOCKS_DIR, file_name)), 'rb') as block:
+        return hashlib.md5(block.read()).hexdigest()
 
 
 def check_blocks_hash():
     results = []
-    blocks = os.listdir(TRANSACT_DIR)
+    blocks = os.listdir(BLOCKS_DIR)
     blocks = sorted(blocks, key=int)
 
     for block in blocks[1:]:
-        with open(TRANSACT_DIR + block) as current_block:
-            current_block_data = json.load(current_block)
+        with open('/'.join((BLOCKS_DIR, block)), 'r') as current_block:
+            block_data = json.load(current_block)
             prev_block = str(int(block) - 1)
             actual_hash = get_hash(prev_block)
 
-            if current_block_data['hash'] == actual_hash:
+            if block_data['hash'] == actual_hash:
                 res = 'Ok'
             else:
                 res = 'Corrupted'
@@ -34,7 +34,7 @@ def check_blocks_hash():
 
 def write_block_transact(who, amount, to_whom, block_hash=''):
     block = 0
-    blocks = os.listdir(TRANSACT_DIR)
+    blocks = os.listdir(BLOCKS_DIR)
 
     if len(blocks) != 0:
         block = sorted(blocks, key=int)[-1]
@@ -49,5 +49,5 @@ def write_block_transact(who, amount, to_whom, block_hash=''):
         'hash': block_hash
     }
 
-    with open(TRANSACT_DIR + new_block, 'w') as file:
-        json.dump(data, file, indent=4, ensure_ascii=False)
+    with open('/'.join((BLOCKS_DIR, new_block)), 'w') as block:
+        json.dump(data, block, indent=4, ensure_ascii=False)
